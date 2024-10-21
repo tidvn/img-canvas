@@ -2,7 +2,7 @@ const express = require("express");
 const { createCanvas, loadImage } = require("canvas");
 
 const app = express();
-const PORT = 3000;
+const PORT = 3786;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
