@@ -7,3 +7,4 @@ services:
       - "3786:3000"
     volumes:
       - .:/app
+    restart: always
