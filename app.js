@@ -48,11 +48,9 @@ app.get("/", async (req, res) => {
             "attachment; filename=generated-image.png"
         );
         res.send(buffer);
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error:", error);
-        res
-            .status(500)
-            .json({ message: "An error occurred", error: error.message });
+        res.status(500).json({ message: "An error occurred", error: error.message });
     }
 });
 
