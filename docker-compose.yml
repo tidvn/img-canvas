@@ -1,5 +1,5 @@
 services:
-  app:
+  img_ticket_build:
     build:
       context: .
       dockerfile: Dockerfile
