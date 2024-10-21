@@ -1,1 +1,9 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5382:3000"
+    volumes:
+      - .:/app
