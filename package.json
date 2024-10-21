@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "start": "nodemon --exec tsx app.ts"
+    "start": "tsx app.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -16,7 +16,6 @@
     "axios": "^1.7.7",
     "canvas": "^2.11.2",
     "express": "^4.21.1",
-    "nodemon": "^3.1.7",
     "tsx": "^4.19.1"
   }
 }
