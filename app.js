@@ -79,10 +79,10 @@ app.get("/ticket", async (req, res) => {
 
     // Set the content type to image/png and send the buffer
     res.setHeader("Content-Type", "image/png");
-    // res.setHeader(
-    //   "Content-Disposition",
-    //   "attachment; filename=generated-image.png"
-    // );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=generated-image.png"
+    );
     res.send(buffer);
   } catch (error) {
     console.error("Error:", error);
