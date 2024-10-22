@@ -8,10 +8,18 @@ const PORT = 3000;
 app.use(express.json());
 app.get("/ticket", async (req, res) => {
   try {
-    const { name, email, wallet } = req.query;
-    if (!name || !email || !wallet) {
+    const { name, email, wallet, avatar } = req.query;
+    if (!name || !email || !wallet || !avatar) {
       throw new Error("Missing required fields");
     }
+    let avatarImg = "./avatar_default.png";
+    if (
+      String(avatar).startsWith("http://") ||
+      String(avatar).startsWith("https://")
+    ) {
+      avatarImg = avatar;
+    }
+
     const walletStr = String(wallet);
     const walletFormatted =
       walletStr.length > 30
@@ -36,6 +44,36 @@ app.get("/ticket", async (req, res) => {
     ctx.fillText(String(email), 533, 308);
     ctx.fillText(String(walletFormatted), 533, 372);
 
+    const avatarImage = await loadImage(avatarImg);
+    const avatarSize = 100;
+    const avatarX = 30;
+    const avatarY = 370;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(
+      avatarX + avatarSize / 2,
+      avatarY + avatarSize / 2,
+      avatarSize / 2,
+      0,
+      Math.PI * 2
+    );
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(avatarImage, avatarX, avatarY, avatarSize, avatarSize);
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = "white";
+    ctx.beginPath();
+    ctx.arc(
+      avatarX + avatarSize / 2,
+      avatarY + avatarSize / 2,
+      avatarSize / 2 + 3,
+      0,
+      Math.PI * 2
+    );
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore();
+
     // Convert canvas to buffer
     const buffer = canvas.toBuffer("image/png");
 
@@ -59,7 +97,13 @@ app.get("/certificate", async (req, res) => {
     if (!type || !name || !avatar) {
       throw new Error("Missing required fields");
     }
-
+    let avatarImg = "./avatar_default.png";
+    if (
+      String(avatar).startsWith("http://") ||
+      String(avatar).startsWith("https://")
+    ) {
+      avatarImg = avatar;
+    }
     const width = 862;
     const height = 1080;
     const canvas = createCanvas(width, height);
@@ -87,7 +131,7 @@ app.get("/certificate", async (req, res) => {
     // drawCenteredText(ctx, "Certificate", 370);
 
     //thêm ảnh vào đây
-    const avatarImage = await loadImage(avatar);
+    const avatarImage = await loadImage(avatarImg);
     const avatarSize = 300;
     const avatarX = (width - avatarSize) / 2;
     const avatarY = 350;
