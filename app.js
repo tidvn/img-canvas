@@ -9,15 +9,8 @@ app.use(express.json());
 app.get("/ticket", async (req, res) => {
   try {
     const { name, email, wallet, avatar } = req.query;
-    if (!name || !email || !wallet || !avatar) {
+    if (!name || !email || !wallet) {
       throw new Error("Missing required fields");
-    }
-    let avatarImg = "./avatar_default.png";
-    if (
-      String(avatar).startsWith("http://") ||
-      String(avatar).startsWith("https://")
-    ) {
-      avatarImg = avatar;
     }
 
     const walletStr = String(wallet);
@@ -44,35 +37,40 @@ app.get("/ticket", async (req, res) => {
     ctx.fillText(String(email), 533, 308);
     ctx.fillText(String(walletFormatted), 533, 372);
 
-    const avatarImage = await loadImage(avatarImg);
-    const avatarSize = 100;
-    const avatarX = 30;
-    const avatarY = 370;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(
-      avatarX + avatarSize / 2,
-      avatarY + avatarSize / 2,
-      avatarSize / 2,
-      0,
-      Math.PI * 2
-    );
-    ctx.closePath();
-    ctx.clip();
-    ctx.drawImage(avatarImage, avatarX, avatarY, avatarSize, avatarSize);
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = "white";
-    ctx.beginPath();
-    ctx.arc(
-      avatarX + avatarSize / 2,
-      avatarY + avatarSize / 2,
-      avatarSize / 2 + 3,
-      0,
-      Math.PI * 2
-    );
-    ctx.closePath();
-    ctx.stroke();
-    ctx.restore();
+    if (
+      avatar &&
+      (avatar.startsWith("http://") || avatar.startsWith("https://"))
+    ) {
+      const avatarImage = await loadImage(avatarImg);
+      const avatarSize = 35;
+      const avatarX = 487;
+      const avatarY = 220;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(
+        avatarX + avatarSize / 2,
+        avatarY + avatarSize / 2,
+        avatarSize / 2,
+        0,
+        Math.PI * 2
+      );
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(avatarImage, avatarX, avatarY, avatarSize, avatarSize);
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = "white";
+      ctx.beginPath();
+      ctx.arc(
+        avatarX + avatarSize / 2,
+        avatarY + avatarSize / 2,
+        avatarSize / 2 + 3,
+        0,
+        Math.PI * 2
+      );
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
 
     // Convert canvas to buffer
     const buffer = canvas.toBuffer("image/png");
@@ -94,12 +92,12 @@ app.get("/ticket", async (req, res) => {
 app.get("/certificate", async (req, res) => {
   try {
     const { type, name, avatar } = req.query;
-    if (!type || !name || !avatar) {
+    if (!type || !name) {
       throw new Error("Missing required fields");
     }
-    let avatarImg = "./avatar_default.png";
+    let avatarImg = "./avatar_default.jpg";
     if (
-      String(avatar).startsWith("http://") ||
+      (avatar && String(avatar).startsWith("http://")) ||
       String(avatar).startsWith("https://")
     ) {
       avatarImg = avatar;
@@ -127,14 +125,14 @@ app.get("/certificate", async (req, res) => {
       ctx.fillText(text, x, y);
     }
 
-    // ctx.font = "bold 20px Genta";
-    // drawCenteredText(ctx, "Certificate", 370);
+    ctx.font = "bold 30px Genta";
+    drawCenteredText(ctx, "This certificate is presented to", 370);
+    // drawCenteredText(ctx, "_____________", 390);
 
-    //thêm ảnh vào đây
     const avatarImage = await loadImage(avatarImg);
-    const avatarSize = 300;
+    const avatarSize = 250;
     const avatarX = (width - avatarSize) / 2;
-    const avatarY = 350;
+    const avatarY = 420;
     ctx.save();
     ctx.beginPath();
     ctx.arc(
@@ -161,17 +159,17 @@ app.get("/certificate", async (req, res) => {
     ctx.stroke();
     ctx.restore();
 
-    ctx.font = "bold 60px Genta";
-    drawCenteredText(ctx, name, 700);
+    ctx.font = "bold 50px Genta";
+    drawCenteredText(ctx, "Phung Tien Dung", 730);
 
-    ctx.font = "bold 20px Genta";
-    drawCenteredText(ctx, "Participated The Event", 800);
+    ctx.font = "bold 28px Genta";
+    drawCenteredText(ctx, "for attending the event", 800);
     const buffer = canvas.toBuffer("image/png");
     res.setHeader("Content-Type", "image/png");
-    // res.setHeader(
-    //   "Content-Disposition",
-    //   "attachment; filename=generated-image.png"
-    // );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=generated-image.png"
+    );
     res.send(buffer);
   } catch (error) {
     console.error("Error:", error);
